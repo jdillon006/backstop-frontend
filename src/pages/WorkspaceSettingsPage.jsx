@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://backstop-api.vercel.app';
 
-export default function WorkspaceSettingsPage({ token, workspaceId, userId }) {
+export default function WorkspaceSettingsPage({ token, workspaceId }) {
   const navigate = useNavigate();
   const [workspace, setWorkspace] = useState(null);
   const [coaches, setCoaches] = useState([]);
@@ -13,38 +13,30 @@ export default function WorkspaceSettingsPage({ token, workspaceId, userId }) {
   const [workspaceName, setWorkspaceName] = useState('');
 
   useEffect(() => {
-    const fetchWorkspace = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/workspaces/${workspaceId}`, {
+        const resWs = await fetch(`${API_URL}/api/workspaces/${workspaceId}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
-        const data = await res.json();
-        setWorkspace(data);
-        setWorkspaceName(data.name);
-      } catch (err) {
-        setError('Failed to load workspace');
-      }
-    };
+        const dataWs = await resWs.json();
+        setWorkspace(dataWs);
+        setWorkspaceName(dataWs.name);
 
-    const fetchCoaches = async () => {
-      try {
-        const res = await fetch(`${API_URL}/api/workspaces/${workspaceId}/coaches`, {
+        const resCo = await fetch(`${API_URL}/api/workspaces/${workspaceId}/coaches`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
-        const data = await res.json();
-        setCoaches(data || []);
+        const dataCo = await resCo.json();
+        setCoaches(dataCo || []);
       } catch (err) {
-        setError('Failed to load coaches');
+        setError('Failed to load data');
       } finally {
         setLoading(false);
       }
     };
-
-    fetchWorkspace();
-    fetchCoaches();
+    fetchData();
   }, [workspaceId, token]);
 
-  const handleUpdateWorkspaceName = async (e) => {
+  const handleUpdateName = async (e) => {
     e.preventDefault();
     try {
       await fetch(`${API_URL}/api/workspaces/${workspaceId}`, {
@@ -57,11 +49,11 @@ export default function WorkspaceSettingsPage({ token, workspaceId, userId }) {
       });
       setWorkspace({ ...workspace, name: workspaceName });
     } catch (err) {
-      setError('Failed to update workspace name');
+      setError('Failed to update');
     }
   };
 
-  const handleInviteCoach = async (e) => {
+  const handleInvite = async (e) => {
     e.preventDefault();
     try {
       await fetch(`${API_URL}/api/workspaces/${workspaceId}/coaches/invite`, {
@@ -89,4 +81,31 @@ export default function WorkspaceSettingsPage({ token, workspaceId, userId }) {
 
       <section className="settings-section">
         <h3>Workspace Name</h3>
-        <form
+        <form onSubmit={handleUpdateName}>
+          <input type="text" value={workspaceName} onChange={(e) => setWorkspaceName(e.target.value)} />
+          <button type="submit" className="btn-primary">Update</button>
+        </form>
+      </section>
+
+      <section className="settings-section">
+        <h3>Team Coaches</h3>
+        <ul className="coaches-list">
+          {coaches.map(coach => (
+            <li key={coach.id}>
+              <strong>{coach.email}</strong>
+              <span className="coach-role">{coach.role}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="settings-section">
+        <h3>Invite Coach</h3>
+        <form onSubmit={handleInvite}>
+          <input type="email" placeholder="coach@example.com" value={inviteEmail} onChange={(e) => setInviteEmail(e.target.value)} required />
+          <button type="submit" className="btn-primary">Send Invite</button>
+        </form>
+      </section>
+    </div>
+  );
+}
