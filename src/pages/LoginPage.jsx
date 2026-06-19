@@ -47,7 +47,7 @@ export default function LoginPage({ onLogin }) {
         <div className="login-header">
           <span className="logo-icon" style={{ fontSize: '48px' }}>📊</span>
           <h1>Backstop</h1>
-          <p>Baseball Scouting Intelligence</p>
+          <p>Team Summaries</p>
         </div>
 
         <form onSubmit={handleSubmit}>
