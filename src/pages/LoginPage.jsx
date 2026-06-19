@@ -45,7 +45,7 @@ export default function LoginPage({ onLogin }) {
     <div className="login-container">
       <div className="login-card">
         <div className="login-header">
-          <span className="logo-icon" style={{ fontSize: '48px' }}>📊</span>
+        <img src="/bc-express-logo.png" alt="BC Express" style={{ height: '60px', width: 'auto' }} />
           <h1>Backstop</h1>
           <p>Team Summaries</p>
         </div>
