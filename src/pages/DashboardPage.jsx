@@ -1,53 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const API_URL = process.env.REACT_APP_API_URL || 'https://backstop-api.vercel.app';
-
 export default function DashboardPage({ token, workspaceId }) {
-  const [opponents, setOpponents] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [opponents, setOpponents] = useState([
+    { id: '1', name: 'Hickory Hornets 10U' },
+    { id: '2', name: 'Carroll Manor Cardinals 10U' },
+    { id: '3', name: 'Hereford Bulls 10U' },
+    { id: '4', name: 'White Marsh Warriors 10U' },
+    { id: '5', name: 'SoBo Baseball 10U' },
+  ]);
   const [showModal, setShowModal] = useState(false);
   const [newOpponentName, setNewOpponentName] = useState('');
-  const [error, setError] = useState('');
 
-  useEffect(() => {
-    const fetchOpponents = async () => {
-      try {
-        const res = await fetch(`${API_URL}/api/workspaces/${workspaceId}/opponents`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const data = await res.json();
-        setOpponents(data || []);
-      } catch (err) {
-        setError('Failed to load opponents');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchOpponents();
-  }, [workspaceId, token]);
-
-  const handleAddOpponent = async (e) => {
+  const handleAddOpponent = (e) => {
     e.preventDefault();
-    try {
-      const res = await fetch(`${API_URL}/api/workspaces/${workspaceId}/opponents`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ name: newOpponentName })
-      });
-      const data = await res.json();
-      setOpponents([...opponents, data]);
+    if (newOpponentName.trim()) {
+      setOpponents([...opponents, { id: Date.now().toString(), name: newOpponentName }]);
       setNewOpponentName('');
       setShowModal(false);
-    } catch (err) {
-      setError('Failed to add opponent');
     }
   };
-
-  if (loading) return <div className="dashboard"><p>Loading...</p></div>;
 
   return (
     <div className="dashboard">
@@ -56,22 +28,16 @@ export default function DashboardPage({ token, workspaceId }) {
         <button onClick={() => setShowModal(true)} className="add-btn">+ Add Opponent</button>
       </div>
 
-      {error && <div className="error-message">{error}</div>}
-
       <div className="opponents-grid">
-        {opponents.length === 0 ? (
-          <div className="empty-state"><p>No opponents yet. Add one to get started.</p></div>
-        ) : (
-          opponents.map(opponent => (
-            <div key={opponent.id} className="opponent-card">
-              <h3>{opponent.name}</h3>
-              <div className="card-actions">
-                <Link to={`/opponents/${opponent.id}`} className="btn-primary">View Briefing</Link>
-                <Link to={`/opponents/${opponent.id}/upload`} className="btn-secondary">Upload Game</Link>
-              </div>
+        {opponents.map(opponent => (
+          <div key={opponent.id} className="opponent-card">
+            <h3>{opponent.name}</h3>
+            <div className="card-actions">
+              <Link to={`/opponents/${opponent.id}`} className="btn-primary">View Briefing</Link>
+              <Link to={`/opponents/${opponent.id}/upload`} className="btn-secondary">Upload Game</Link>
             </div>
-          ))
-        )}
+          </div>
+        ))}
       </div>
 
       {showModal && (
