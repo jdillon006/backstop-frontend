@@ -11,10 +11,7 @@ export default function BriefingPage({ token }) {
   const [error, setError] = useState('');
   const [view, setView] = useState('batting'); // 'batting' or 'pitching'
 
- useEffect(() => {
-  fetchBriefing();
-}, [opponentId, token, fetchBriefing]);
-
+useEffect(() => {
   const fetchBriefing = async () => {
     try {
       const res = await fetch(`${API_URL}/api/opponents/${opponentId}/briefing`, {
@@ -28,6 +25,9 @@ export default function BriefingPage({ token }) {
       setLoading(false);
     }
   };
+  
+  fetchBriefing();
+}, [opponentId, token]);
 
   if (loading) {
     return <div className="briefing"><p>Loading...</p></div>;
