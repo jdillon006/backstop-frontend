@@ -13,9 +13,9 @@ export default function WorkspaceSettingsPage({ token, workspaceId, userId }) {
   const [workspaceName, setWorkspaceName] = useState('');
 
   useEffect(() => {
-    fetchWorkspace();
-    fetchCoaches();
-  }, [workspaceId, token]);
+  fetchWorkspace();
+  fetchCoaches();
+}, [workspaceId, token, fetchWorkspace, fetchCoaches]);
 
   const fetchWorkspace = async () => {
     try {
