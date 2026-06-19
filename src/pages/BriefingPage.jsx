@@ -49,10 +49,10 @@ export default function BriefingPage({ token }) {
 
       <div className="view-toggle">
         <button className={view === 'batting' ? 'active' : ''} onClick={() => setView('batting')}>
-          ⚾ BATTING
+       🧢 BATTING
         </button>
         <button className={view === 'pitching' ? 'active' : ''} onClick={() => setView('pitching')}>
-          🏐 PITCHING
+          ⚾ PITCHING
         </button>
       </div>
 
