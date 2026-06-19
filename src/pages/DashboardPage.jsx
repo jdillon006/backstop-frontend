@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://backstop-api.vercel.app';
 
@@ -11,22 +11,21 @@ export default function DashboardPage({ token, workspaceId }) {
   const [error, setError] = useState('');
 
   useEffect(() => {
-  fetchOpponents();
-}, [workspaceId, token, fetchOpponents]);
-
-  const fetchOpponents = async () => {
-    try {
-      const res = await fetch(`${API_URL}/api/workspaces/${workspaceId}/opponents`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const data = await res.json();
-      setOpponents(data || []);
-    } catch (err) {
-      setError('Failed to load opponents');
-    } finally {
-      setLoading(false);
-    }
-  };
+    const fetchOpponents = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/workspaces/${workspaceId}/opponents`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        setOpponents(data || []);
+      } catch (err) {
+        setError('Failed to load opponents');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchOpponents();
+  }, [workspaceId, token]);
 
   const handleAddOpponent = async (e) => {
     e.preventDefault();
@@ -48,9 +47,7 @@ export default function DashboardPage({ token, workspaceId }) {
     }
   };
 
-  if (loading) {
-    return <div className="dashboard"><p>Loading...</p></div>;
-  }
+  if (loading) return <div className="dashboard"><p>Loading...</p></div>;
 
   return (
     <div className="dashboard">
@@ -63,9 +60,7 @@ export default function DashboardPage({ token, workspaceId }) {
 
       <div className="opponents-grid">
         {opponents.length === 0 ? (
-          <div className="empty-state">
-            <p>No opponents yet. Add one to get started.</p>
-          </div>
+          <div className="empty-state"><p>No opponents yet. Add one to get started.</p></div>
         ) : (
           opponents.map(opponent => (
             <div key={opponent.id} className="opponent-card">
@@ -86,7 +81,7 @@ export default function DashboardPage({ token, workspaceId }) {
             <form onSubmit={handleAddOpponent}>
               <input
                 type="text"
-                placeholder="Team Name (e.g., Hickory Hornets 10U)"
+                placeholder="Team Name"
                 value={newOpponentName}
                 onChange={(e) => setNewOpponentName(e.target.value)}
                 required
@@ -100,8 +95,6 @@ export default function DashboardPage({ token, workspaceId }) {
           </div>
         </div>
       )}
-
-      <Link to="/settings" className="settings-link">⚙️ Workspace Settings</Link>
     </div>
   );
 }
