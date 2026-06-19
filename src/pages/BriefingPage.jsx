@@ -11,9 +11,9 @@ export default function BriefingPage({ token }) {
   const [error, setError] = useState('');
   const [view, setView] = useState('batting'); // 'batting' or 'pitching'
 
-  useEffect(() => {
-    fetchBriefing();
-  }, [opponentId, token]);
+ useEffect(() => {
+  fetchBriefing();
+}, [opponentId, token, fetchBriefing]);
 
   const fetchBriefing = async () => {
     try {
