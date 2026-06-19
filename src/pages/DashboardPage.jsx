@@ -4,7 +4,6 @@ import { useNavigate, Link } from 'react-router-dom';
 const API_URL = process.env.REACT_APP_API_URL || 'https://backstop-api.vercel.app';
 
 export default function DashboardPage({ token, workspaceId }) {
-  const navigate = useNavigate();
   const [opponents, setOpponents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -12,8 +11,8 @@ export default function DashboardPage({ token, workspaceId }) {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetchOpponents();
-  }, [workspaceId, token]);
+  fetchOpponents();
+}, [workspaceId, token, fetchOpponents]);
 
   const fetchOpponents = async () => {
     try {
