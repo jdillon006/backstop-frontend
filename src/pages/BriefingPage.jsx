@@ -9,24 +9,24 @@ export default function BriefingPage({ token }) {
   const [briefing, setBriefing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [view, setView] = useState('batting'); // 'batting' or 'pitching'
+  const [view, setView] = useState('batting');
 
-useEffect(() => {
-  const fetchBriefing = async () => {
-    try {
-      const res = await fetch(`${API_URL}/api/opponents/${opponentId}/briefing`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      const data = await res.json();
-      setBriefing(data);
-    } catch (err) {
-      setError('Failed to load briefing');
-    } finally {
-      setLoading(false);
-    }
-  };
-  
-
+  useEffect(() => {
+    const fetchBriefing = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/opponents/${opponentId}/briefing`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        setBriefing(data);
+      } catch (err) {
+        setError('Failed to load briefing');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchBriefing();
+  }, [opponentId, token]);
 
   if (loading) {
     return <div className="briefing"><p>Loading...</p></div>;
@@ -59,7 +59,6 @@ useEffect(() => {
         </p>
       </div>
 
-      {/* Toggle Batting / Pitching */}
       <div className="view-toggle">
         <button 
           className={view === 'batting' ? 'active' : ''}
@@ -75,7 +74,6 @@ useEffect(() => {
         </button>
       </div>
 
-      {/* BATTING VIEW */}
       {view === 'batting' && (
         <div className="stats-section">
           <h2>Offensive Threats</h2>
@@ -108,78 +106,3 @@ useEffect(() => {
                       <td>{player.k_pct}%</td>
                       <td>{player.ab}</td>
                       <td>{player.h}</td>
-                      <td>{player.doubles}</td>
-                      <td>{player.hr}</td>
-                      <td>{player.sb}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* PITCHING VIEW */}
-      {view === 'pitching' && (
-        <div className="stats-section">
-          <h2>Pitching Staff</h2>
-          {briefing.pitching.length === 0 ? (
-            <p>No pitching data yet.</p>
-          ) : (
-            <div className="stats-table">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Pitcher</th>
-                    <th>ERA</th>
-                    <th>WHIP</th>
-                    <th>K%</th>
-                    <th>IP</th>
-                    <th>H</th>
-                    <th>ER</th>
-                    <th>BB</th>
-                    <th>SO</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {briefing.pitching.map((pitcher, i) => (
-                    <tr key={i}>
-                      <td className="player-name">{pitcher.name}</td>
-                      <td><strong>{pitcher.era}</strong></td>
-                      <td>{pitcher.whip}</td>
-                      <td>{pitcher.k_pct}%</td>
-                      <td>{pitcher.ip}</td>
-                      <td>{pitcher.h}</td>
-                      <td>{pitcher.er}</td>
-                      <td>{pitcher.bb}</td>
-                      <td>{pitcher.so}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* GAME PLAN */}
-      <div className="game-plan-section">
-        <h2>Game Plan</h2>
-        <ul className="game-plan-list">
-          {briefing.game_plan.map((item, i) => (
-            <li key={i}>{item}</li>
-          ))}
-        </ul>
-      </div>
-
-      {/* ACTIONS */}
-      <div className="briefing-actions">
-        <button onClick={() => navigate(`/opponents/${opponentId}/upload`)} className="btn-primary">
-          Upload New Game
-        </button>
-        <button onClick={fetchBriefing} className="btn-secondary">Refresh</button>
-      </div>
-    </div>
-  );
-}
