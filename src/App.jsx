@@ -39,7 +39,7 @@ function App() {
       <div className="app">
         <nav className="navbar">
           <div className="navbar-brand">
-            <img src="/bc-express-logo.png" alt="BC Express" style={{ height: '50px', width: 'auto' }} />
+<img src="https://raw.githubusercontent.com/jdillon006/backstop-frontend/main/public/bc-express-logo.png" alt="BC Express" style={{ height: '50px', width: 'auto' }} />
             <h1>Backstop</h1>
           </div>
           <button onClick={handleLogout} className="logout-btn">Sign Out</button>
