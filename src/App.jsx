@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import BriefingPage from './pages/BriefingPage';
 import UploadPage from './pages/UploadPage';
@@ -8,38 +7,21 @@ import WorkspaceSettingsPage from './pages/WorkspaceSettingsPage';
 import './App.css';
 
 function App() {
-  const [token, setToken] = useState(localStorage.getItem('token'));
-  const [workspaceId, setWorkspaceId] = useState(localStorage.getItem('workspaceId'));
-  const [userId, setUserId] = useState(localStorage.getItem('userId'));
-
-  const handleLogin = (newToken, newWorkspaceId, newUserId) => {
-    setToken(newToken);
-    setWorkspaceId(newWorkspaceId);
-    setUserId(newUserId);
-    localStorage.setItem('token', newToken);
-    localStorage.setItem('workspaceId', newWorkspaceId);
-    localStorage.setItem('userId', newUserId);
-  };
+  // Hardcoded for MVP - skip auth
+  const token = 'test-token';
+  const workspaceId = 'test-workspace-id';
+  const userId = 'test-user-id';
 
   const handleLogout = () => {
-    setToken(null);
-    setWorkspaceId(null);
-    setUserId(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('workspaceId');
-    localStorage.removeItem('userId');
+    window.location.reload();
   };
-
-  if (!token) {
-    return <LoginPage onLogin={handleLogin} />;
-  }
 
   return (
     <BrowserRouter>
       <div className="app">
         <nav className="navbar">
           <div className="navbar-brand">
-<span style={{ fontSize: '32px', fontWeight: 'bold', color: '#c41e3a' }}>BCC Express ⚾</span>
+            <img src="/bc-express-logo.png" alt="BC Express" style={{ height: '50px', width: 'auto' }} />
             <h1>Backstop</h1>
           </div>
           <button onClick={handleLogout} className="logout-btn">Sign Out</button>
