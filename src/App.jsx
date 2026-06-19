@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import BriefingPage from './pages/BriefingPage';
@@ -11,7 +11,6 @@ function App() {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [workspaceId, setWorkspaceId] = useState(localStorage.getItem('workspaceId'));
   const [userId, setUserId] = useState(localStorage.getItem('userId'));
-  const [loading, setLoading] = useState(false);
 
   const handleLogin = (newToken, newWorkspaceId, newUserId) => {
     setToken(newToken);
