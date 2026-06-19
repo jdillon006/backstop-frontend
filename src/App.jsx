@@ -37,11 +37,10 @@ function App() {
   return (
     <BrowserRouter>
       <div className="app">
-        <nav className="navbar">
-          <div className="navbar-brand">
-            <span className="logo-icon">📊</span>
-            <h1>Backstop</h1>
-          </div>
+<div className="navbar-brand">
+  <img src="/bc-express-logo.png" alt="BC Express" className="logo-image" style={{ height: '50px', width: 'auto' }} />
+  <h1>Backstop</h1>
+</div>
           <button onClick={handleLogout} className="logout-btn">Sign Out</button>
         </nav>
 
