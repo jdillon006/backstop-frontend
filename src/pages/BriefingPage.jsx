@@ -26,8 +26,7 @@ useEffect(() => {
     }
   };
   
-  fetchBriefing();
-}, [opponentId, token]);
+
 
   if (loading) {
     return <div className="briefing"><p>Loading...</p></div>;
