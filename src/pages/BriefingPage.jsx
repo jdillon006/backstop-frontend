@@ -28,22 +28,14 @@ export default function BriefingPage({ token }) {
     fetchBriefing();
   }, [opponentId, token]);
 
-  if (loading) {
-    return <div className="briefing"><p>Loading...</p></div>;
-  }
-
-  if (error) {
-    return <div className="briefing error-message">{error}</div>;
-  }
-
+  if (loading) return <div className="briefing"><p>Loading...</p></div>;
+  if (error) return <div className="briefing error-message">{error}</div>;
   if (!briefing || briefing.games_count === 0) {
     return (
       <div className="briefing">
         <div className="empty-state">
           <p>No games uploaded yet.</p>
-          <button onClick={() => navigate(`/opponents/${opponentId}/upload`)} className="btn-primary">
-            Upload First Game
-          </button>
+          <button onClick={() => navigate(`/opponents/${opponentId}/upload`)} className="btn-primary">Upload First Game</button>
         </div>
       </div>
     );
@@ -51,58 +43,72 @@ export default function BriefingPage({ token }) {
 
   return (
     <div className="briefing">
-      <div className="briefing-header">
-        <button onClick={() => navigate('/')} className="back-btn">← Back</button>
-        <h1>Pre-Game Brief</h1>
-        <p style={{ color: '#94a3b8' }}>
-          {briefing.games_count} games tracked • Updated {new Date(briefing.last_updated).toLocaleDateString()}
-        </p>
-      </div>
+      <button onClick={() => navigate('/')} className="back-btn">← Back</button>
+      <h1>Pre-Game Brief</h1>
+      <p>{briefing.games_count} games • {new Date(briefing.last_updated).toLocaleDateString()}</p>
 
       <div className="view-toggle">
-        <button 
-          className={view === 'batting' ? 'active' : ''}
-          onClick={() => setView('batting')}
-        >
+        <button className={view === 'batting' ? 'active' : ''} onClick={() => setView('batting')}>
           ⚾ BATTING
         </button>
-        <button 
-          className={view === 'pitching' ? 'active' : ''}
-          onClick={() => setView('pitching')}
-        >
+        <button className={view === 'pitching' ? 'active' : ''} onClick={() => setView('pitching')}>
           🏐 PITCHING
         </button>
       </div>
 
-      {view === 'batting' && (
+      {view === 'batting' && briefing.batting.length > 0 && (
         <div className="stats-section">
           <h2>Offensive Threats</h2>
-          {briefing.batting.length === 0 ? (
-            <p>No batting data yet.</p>
-          ) : (
-            <div className="stats-table">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Player</th>
-                    <th>AVG</th>
-                    <th>OBP</th>
-                    <th>K%</th>
-                    <th>AB</th>
-                    <th>H</th>
-                    <th>2B</th>
-                    <th>HR</th>
-                    <th>SB</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {briefing.batting.map((player, i) => (
-                    <tr key={i} className={player.threat ? 'threat' : ''}>
-                      <td className="player-name">
-                        {player.threat && '⚠️ '}{player.name}
-                      </td>
-                      <td><strong>{player.avg}</strong></td>
-                      <td>{player.obp}</td>
-                      <td>{player.k_pct}%</td>
-                      <td>{player.ab}</td>
-                      <td>{player.h}</td>
+          <table className="stats-table">
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>AVG</th>
+                <th>OBP</th>
+                <th>K%</th>
+              </tr>
+            </thead>
+            <tbody>
+              {briefing.batting.map((p, i) => (
+                <tr key={i} className={p.threat ? 'threat' : ''}>
+                  <td>{p.threat && '⚠️'} {p.name}</td>
+                  <td>{p.avg}</td>
+                  <td>{p.obp}</td>
+                  <td>{p.k_pct}%</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {view === 'pitching' && briefing.pitching.length > 0 && (
+        <div className="stats-section">
+          <h2>Pitching Staff</h2>
+          <table className="stats-table">
+            <thead>
+              <tr>
+                <th>Pitcher</th>
+                <th>ERA</th>
+                <th>WHIP</th>
+                <th>K%</th>
+              </tr>
+            </thead>
+            <tbody>
+              {briefing.pitching.map((p, i) => (
+                <tr key={i}>
+                  <td>{p.name}</td>
+                  <td>{p.era}</td>
+                  <td>{p.whip}</td>
+                  <td>{p.k_pct}%</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <button onClick={() => navigate(`/opponents/${opponentId}/upload`)} className="btn-primary">Upload New Game</button>
+    </div>
+  );
+}
